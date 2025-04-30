@@ -4,20 +4,20 @@ import { clerkMiddleware } from "@clerk/nextjs/server";
 export default clerkMiddleware((_, req) => {
   if (req.nextUrl.pathname.match("__clerk")) {
     const proxyHeaders = new Headers(req.headers);
+    proxyHeaders.set("Clerk-Secret-Key", process.env.CLERK_SECRET_KEY || "");
     proxyHeaders.set(
       "Clerk-Proxy-Url",
       process.env.NEXT_PUBLIC_CLERK_PROXY_URL || ""
     );
-    proxyHeaders.set("Clerk-Secret-Key", process.env.CLERK_SECRET_KEY || "");
     proxyHeaders.set(
       "X-Forwarded-For",
       req.headers.get("X-Forwarded-For") || ""
     );
 
     const proxyUrl = new URL(req.url);
+    proxyUrl.protocol = "https";
     proxyUrl.host = "frontend-api.clerk.dev";
     proxyUrl.port = "443";
-    proxyUrl.protocol = "https";
     proxyUrl.pathname = proxyUrl.pathname.replace("/__clerk", "");
 
     return NextResponse.rewrite(proxyUrl, {
