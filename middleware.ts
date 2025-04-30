@@ -34,6 +34,8 @@ export default clerkMiddleware((_, req) => {
 
     console.log("Proxy URL", proxyUrl.toString());
 
+    proxyHeaders.forEach((value, key) => console.log("Proxy Header", key, value));
+
     return NextResponse.rewrite(proxyUrl, {
       request: { headers: proxyHeaders }
     });
