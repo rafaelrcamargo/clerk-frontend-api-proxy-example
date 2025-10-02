@@ -16,7 +16,7 @@ export default clerkMiddleware((_, req) => {
 
     const proxyUrl = new URL(req.url);
     proxyUrl.protocol = "https";
-    proxyUrl.host = "frontend-api.clerk.dev";
+    proxyUrl.host = "frontend-api." + process.env.CLERK_URL || "";
     proxyUrl.port = "443";
     proxyUrl.pathname = proxyUrl.pathname.replace("/__clerk", "");
 
